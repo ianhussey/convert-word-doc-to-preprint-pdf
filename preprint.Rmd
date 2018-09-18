@@ -4,17 +4,6 @@ output:
     latex_engine: xelatex
 ---
 
-```{message=FALSE, warning=FALSE, include=FALSE}
-
-Instructions: 
-  1. Remove all tables and figures from your .docx manuscript. These aren't yet accomodated.
-  2. If the document used a reference manager, convert these fields to text. E.g., in Zotero click the "Remove codes" button.
-  3. Rename your .docx to "manuscript.docx" and place in the same folder as this R markdown file.
-  4. This script assumes your document has a title and authors, the headings "abstract" (followed by "keywords" and then an introduction section), "methods", "results", "discussion", and "references".
-  5. Open this Rmd in RStudio and click the "Knit" button.
-
-```
-
 ```{r message=FALSE, warning=FALSE, include=FALSE}
 
 # check for dependencies
