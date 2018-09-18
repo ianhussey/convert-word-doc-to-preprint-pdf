@@ -8,11 +8,11 @@ This is a proof of concept - tables and figures are not yet accomodated. Please 
 
 ## Usage
 
-    1. Remove all tables and figures from your .docx manuscript. These aren't yet accomodated.
-    2. If the document used a reference manager, convert these fields to text. E.g., in Zotero click the "Remove codes" button.
-    3. This script requires your document to have title and authors as the first and second lines in the document, the headings "abstract", "methods", "results", "discussion", and "references". The abstract must be followed by a line starting with "Keywords", immediately followed by the introduction section.
-    4. Rename your .docx to "manuscript.docx" and place in the same folder as this R markdown file.
-    5. Open the .Rmd in RStudio and click the "Knit" button. "preprint.pdf" will be created in the same folder.
+1. Remove all tables and figures from your .docx manuscript. These aren't yet accomodated.
+2. If the document used a reference manager, convert these fields to text. E.g., in Zotero click the "Remove codes" button.
+3. This script requires your document to have title and authors as the first and second lines in the document, the headings "abstract", "methods", "results", "discussion", and "references". The abstract must be followed by a line starting with "Keywords", immediately followed by the introduction section.
+4. Rename your .docx to "manuscript.docx" and place in the same folder as this R markdown file.
+5. Open the .Rmd in RStudio and click the "Knit" button. "preprint.pdf" will be created in the same folder.
 
 ## License
 
