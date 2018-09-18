@@ -1,0 +1,148 @@
+---
+output:
+  pdf_document:
+    latex_engine: xelatex
+---
+
+```{message=FALSE, warning=FALSE, include=FALSE}
+
+Instructions: 
+  1. Remove all tables and figures from your .docx manuscript. These aren't yet accomodated.
+  2. If the document used a reference manager, convert these fields to text. E.g., in Zotero click the "Remove codes" button.
+  3. Rename your .docx to "manuscript.docx" and place in the same folder as this R markdown file.
+  4. This script assumes your document has a title and authors, the headings "abstract" (followed by "keywords" and then an introduction section), "methods", "results", "discussion", and "references".
+  5. Open this Rmd in RStudio and click the "Knit" button.
+
+```
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+
+# check for dependencies
+if(!require(tidyverse)) {install.packages("tidyverse")}
+if(!require(textreadr)) {install.packages("textreadr")}
+if(!require(stringr)) {install.packages("stringr")}
+
+# load dependencies
+library(tidyverse)
+library(textreadr)
+library(stringr)
+
+# get data
+text <- read_docx("manuscript.docx")
+
+# tidy, inc removing empty rows
+text_df <- data.frame(text = text) %>%
+  rownames_to_column(var = "rownumber") %>%
+  mutate(rownumber = as.integer(as.character(rownumber)),
+         text = as.character(text)) %>%
+  filter(text != "")
+
+# find important rows
+rownumber_abstract <- text_df %>%
+  filter(text == "Abstract") %>%
+  mutate(rownumber = rownumber + 1) %>%
+  pull(rownumber) 
+
+rownumber_keywords <- text_df %>%
+  filter(grepl("^Keywords", text)) %>%
+  pull(rownumber)
+
+rownumber_introduction <- rownumber_keywords + 1
+
+rownumber_methods <- text_df %>%
+  filter(text == "Method") %>%
+  mutate(rownumber = rownumber + 1) %>%
+  pull(rownumber)
+
+rownumber_results <- text_df %>%
+  filter(text == "Results") %>%
+  mutate(rownumber = rownumber + 1) %>%
+  pull(rownumber)
+
+rownumber_discussion <- text_df %>%
+  filter(text == "Discussion") %>%
+  mutate(rownumber = rownumber + 1) %>%
+  pull(rownumber)
+
+rownumber_references <- text_df %>%
+  filter(text == "References") %>%
+  mutate(rownumber = rownumber + 1) %>%
+  pull(rownumber)
+
+# extract text sections
+text_title <- text_df %>%
+  filter(rownumber == 1) %>%
+  pull(text)
+
+text_authors <- text_df %>%
+  filter(rownumber == 2) %>%
+  pull(text)
+
+text_abstract <- text_df %>%
+  filter(rownumber == rownumber_abstract) %>%
+  pull(text)
+
+text_introduction <- text_df %>%
+  filter(rownumber >= rownumber_introduction & 
+           rownumber < rownumber_methods-1) %>%
+  mutate(text = paste0(text, "\n\n")) %>%
+  pull(text) %>%
+  paste(., collapse = "")
+
+text_methods <- text_df %>%
+  filter(rownumber >= rownumber_methods & 
+           rownumber < rownumber_results-1) %>%
+  mutate(text = paste0(text, "\n\n")) %>%
+  pull(text) %>%
+  paste(., collapse = "")
+
+text_results <- text_df %>%
+  filter(rownumber >= rownumber_results & 
+           rownumber < rownumber_discussion-1) %>%
+  mutate(text = paste0(text, "\n\n")) %>%
+  pull(text) %>%
+  paste(., collapse = "")
+
+text_discussion <- text_df %>%
+  filter(rownumber >= rownumber_discussion & 
+           rownumber < rownumber_references-1) %>%
+  mutate(text = paste0(text, "\n\n")) %>%
+  pull(text) %>%
+  paste(., collapse = "")
+
+text_references <- text_df %>%
+  filter(rownumber >= rownumber_references) %>%
+  mutate(text = paste0(text, "\n\n")) %>%
+  pull(text) %>%
+  paste(., collapse = "")
+
+```
+
+# Abstract
+
+`r text_abstract`
+
+# Introduction
+
+`r text_introduction`
+
+# Methods
+
+`r text_methods`
+
+# Results
+
+`r text_results`
+
+# Discussion
+
+`r text_discussion`
+
+# References
+
+`r text_references`
+
+---
+title: `r text_title`
+author: `r text_authors`
+---
